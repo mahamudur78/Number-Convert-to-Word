@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>Number Convert to Word</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+</head>
+<body>
+
+<div class="container">
+  <h2>Number Convert to Word</h2>
+  <!-- <p>The form below contains two input elements; one of type text and one of type password:</p> -->
+
+    <div class="form-group">
+		<p>Please input number:</p>
+		<input type="text" class="form-control" onkeyup="NumToWord(this.value,'displayWords');"  maxlength="10">
+
+		<div  style="font-size: 50">
+		<h2 id="displayWords">Empty number</h2>
+	</div>
+	<img id="qrcode" src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=Number Convert to Word" width="200" height="200">
+</div>
+
+</body>
+ <script  type="text/javascript">
+
+function NumToWord(number, outputControl) {
+
+	 var inputNumber = number;
+	/*console.log(number);
+	var inputNumber = 0;
+	while(number != 0){
+		inputNumber = (inputNumber * 10) + (number % 10);
+		number = Math.floor(number /10);
+	}*/
+
+	var frac = inputNumber % 1;
+	console.log(frac);
+	var j = 0;
+	if(inputNumber == ''){
+		document.getElementById(outputControl).innerHTML = 'Empty number';
+		document.getElementById("qrcode").src = "https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=Empty number";
+	}else if(frac > 0 ){
+		document.getElementById(outputControl).innerHTML =  'Please do not input  fraction value.';
+		document.getElementById("qrcode").src = "https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=Please do not input  fraction value.";
+	}else if(inputNumber == 0){
+		document.getElementById(outputControl).innerHTML = 'zero';
+		document.getElementById("qrcode").src = "https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=zero";
+	}else if (isNaN(inputNumber) || inputNumber < 0 || inputNumber >= 10000000000) {
+		document.getElementById(outputControl).innerHTML = 'Invalide Number';
+		document.getElementById("qrcode").src = "https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=Invlide Number";
+	} else {
+	
+		console.log(inputNumber);
+
+		var str = new String(Math.floor(inputNumber));
+		console.log(str);
+		var splt = str.split("");
+		splt.reverse();
+		var len = splt.length;
+		
+		var numWord = new Array();
+		var finalWord = '';
+		
+		var st1_digits = ['','one','two','three','four','five','six','seven','eight','nine'];
+		var st2_digits = ['ten','eleven','twelve','thirteen','fourteen','fifteen','sixteen','seventeen','eighteen','nineteen'];
+		var st3_digite = ['','ten','twenty','thirty','forty','fifty','sixty','seventy','eighty','ninety'];
+		
+		
+		var z = 0; var x = 1; var lak = 1; var cro = 1;
+		console.log();
+		for(var i = len ; i >= 0; i--){
+			if(i == 1 ){
+				if(z == 1){
+					numWord[j] = '';
+				}else{
+					numWord[j] = st1_digits[splt[0]];				
+				}
+			}else if(i == 2){
+				if(splt[1] == 1){
+					numWord[j] = st2_digits[splt[0]];
+					z = 1;
+				}else{
+					numWord[j] = st3_digite[splt[1]];
+				}
+			}else if(i == 3){
+				if(inputNumber >= 1000 && inputNumber <1100){
+					numWord[j] = '';
+				}else{
+					if(inputNumber % 1000 == 0){
+						numWord[j] = '';
+					}else{
+						numWord[j] = st1_digits[splt[2]] +' '+ 'hundred';
+					}
+				}
+			}else if(i == 4){
+				if(inputNumber % 10000 == 0){
+						numWord[j] = '';
+					}else{
+						if(x == 1){
+							numWord[j] = st1_digits[splt[3]] +' '+ 'thousand';
+						}else{
+							numWord[j] = '';
+						}
+					}	
+			}else if(i == 5){
+				if(inputNumber % 100000 == 0){
+						numWord[j] = '';
+				}else{
+					if(splt[4] == 1){
+					
+						numWord[j] = st2_digits[splt[3]] +' '+ 'thousand';
+						x = 0;
+					}else{
+						numWord[j] = st3_digite[splt[4]] +' '+ st1_digits[splt[3]] +' '+ 'thousand';
+						x = 0;
+					}
+				}	
+			}else if(i == 6){
+				if(inputNumber % 1000000 == 0){
+						numWord[j] = '';
+				}else{
+					if(lak == 1){
+						numWord[j] = st1_digits[splt[5]] +' '+ 'lakh';
+					}else{
+						numWord[j] = '';
+					}
+				}
+			}else if(i == 7){
+				if(inputNumber % 10000000 == 0){
+						numWord[j] = '';
+				}else{
+					if(splt[6] == 1){
+						numWord[j] = st2_digits[splt[5]] +' '+ 'lakh';
+						lak = 0;
+					}else{
+						numWord[j] = st3_digite[splt[6]] +' '+ st1_digits[splt[5]] +' '+ 'lakh';
+						lak = 0;
+					}
+				}
+			}else if(i == 8){
+				if(cro == 1){
+					numWord[j] = st1_digits[splt[7]] +' '+'crore';
+				}else{
+					numWord[j] = '';
+				}
+			}else if(i == 9){
+				if(splt[8] == 1){
+					numWord[j] = st2_digits[splt[7]] +' '+ 'crore';
+					cro = 0;
+				}else{
+					numWord[j] = st3_digite[splt[8]] +' '+ st1_digits[splt[7]] +' '+ 'crore';
+					cro = 0;
+				}
+			}
+			j++;
+		}
+		
+		if(inputNumber == ''){
+			finalWord = 'Empty number';
+		}
+
+		for(var x = 0; x < len; x++){
+			finalWord = finalWord + ' '+ numWord[x];
+		}
+		
+		if(len <= 9){
+			document.getElementById(outputControl).innerHTML = finalWord;
+			document.getElementById("qrcode").src = "https://api.qrserver.com/v1/create-qr-code/?size=200x200&data="+finalWord;
+		}else{
+			document.getElementById(outputControl).innerHTML = 'This program working maximum 999999999 number';
+			document.getElementById("qrcode").src = "https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=This program working maximum 999999999 number";
+		}
+	}
+}
+    </script>
+</html>
